@@ -1,0 +1,68 @@
+import type { GenerateRequest, StreamChunk } from '@/types/ai';
+import type { AIProviderAdapter } from './base';
+import { parseSSEStream } from '@/lib/sse-parser';
+
+export class AnthropicProvider implements AIProviderAdapter {
+  readonly id = 'anthropic' as const;
+
+  buildRequest(req: GenerateRequest): { url: string; init: RequestInit } {
+    return {
+      url: 'https://api.anthropic.com/v1/messages',
+      init: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': req.apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: req.model,
+          system: req.systemPrompt,
+          messages: [{ role: 'user', content: req.userPrompt }],
+          stream: true,
+          max_tokens: req.maxTokens ?? 1024,
+          temperature: req.temperature ?? 0.7,
+        }),
+      },
+    };
+  }
+
+  async *parseStream(response: Response): AsyncGenerator<StreamChunk> {
+    if (!response.body) {
+      yield { type: 'error', content: 'No response body' };
+      return;
+    }
+
+    for await (const event of parseSSEStream(response.body)) {
+      if (event.event === 'message_stop') {
+        yield { type: 'done', content: '' };
+        return;
+      }
+
+      if (event.event === 'content_block_delta') {
+        try {
+          const parsed = JSON.parse(event.data);
+          if (parsed.delta?.type === 'text_delta' && parsed.delta.text) {
+            yield { type: 'text', content: parsed.delta.text };
+          }
+        } catch {
+          // Skip unparseable events
+        }
+      }
+
+      if (event.event === 'error') {
+        try {
+          const parsed = JSON.parse(event.data);
+          yield { type: 'error', content: parsed.error?.message ?? 'Unknown API error' };
+          return;
+        } catch {
+          yield { type: 'error', content: 'Unknown API error' };
+          return;
+        }
+      }
+    }
+
+    yield { type: 'done', content: '' };
+  }
+}

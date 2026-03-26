@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:host {
+  all: initial;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Fira Sans', Ubuntu, Oxygen, 'Oxygen Sans', Cantarell, 'Droid Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Lucida Grande', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}
+
+.lc-widget {
+  z-index: 2147483647;
+  position: fixed;
+  font-size: 14px;
+  line-height: 1.42;
+  color: rgba(0, 0, 0, 0.9);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force pixel-based font sizes to avoid rem issues inside Shadow DOM */
+.lc-widget .lc-panel {
+  font-size: 14px;
+  line-height: 1.42;
+}
+
+.lc-widget .lc-panel .lc-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.lc-widget .lc-panel .lc-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.lc-widget .lc-panel textarea {
+  font-size: 14px;
+  line-height: 1.42;
+  font-family: inherit;
+}
+
+.lc-widget .lc-panel button {
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.lc-widget .lc-panel .lc-output {
+  font-size: 14px;
+  line-height: 1.5;
+}
