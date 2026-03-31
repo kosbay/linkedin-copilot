@@ -145,31 +145,16 @@ export function ProviderTab() {
         </div>
       </div>
 
-      {/* API Key / License Key */}
+      {/* API Key (BYOK providers) */}
       {config.requiresApiKey && (
         <div>
-          <label className="block text-sm font-semibold mb-1" style={{ color: 'rgba(0,0,0,0.9)' }}>
-            {activeProvider === 'proxy' ? 'License Key' : 'API Key'}
-          </label>
-          {activeProvider === 'proxy' && (
-            <div
-              className="p-3 rounded-lg mb-2"
-              style={{ background: '#e8f3ff', border: '1px solid rgba(10,102,194,0.2)' }}
-            >
-              <p className="text-sm" style={{ color: '#0a66c2' }}>
-                Pro uses our hosted AI — no need to bring your own API key.
-              </p>
-              <p className="text-xs mt-1" style={{ color: '#004182' }}>
-                Enter your license key below to activate.
-              </p>
-            </div>
-          )}
+          <label className="block text-sm font-semibold mb-1" style={{ color: 'rgba(0,0,0,0.9)' }}>API Key</label>
           <div className="relative">
             <input
               type={showKey ? 'text' : 'password'}
               value={currentSettings.apiKey}
               onChange={(e) => updateProviderSettings({ apiKey: e.target.value })}
-              placeholder={activeProvider === 'proxy' ? 'Enter your Pro license key' : `Enter your ${config.name} API key`}
+              placeholder={`Enter your ${config.name} API key`}
               className="w-full px-3 py-2 pr-10 text-sm rounded-lg"
               style={inputStyle}
               onFocus={handleInputFocus}
@@ -185,9 +170,51 @@ export function ProviderTab() {
             </button>
           </div>
           <p className="mt-1 text-xs" style={{ color: 'rgba(0,0,0,0.4)' }}>
-            {activeProvider === 'proxy'
-              ? 'Your license key is stored locally and sent only to our server.'
-              : 'Stored locally on your device. Never sent to our servers.'}
+            Stored locally on your device. Never sent to our servers.
+          </p>
+        </div>
+      )}
+
+      {/* Proxy: Free tier info + optional Pro license key */}
+      {activeProvider === 'proxy' && (
+        <div>
+          <div
+            className="p-3 rounded-lg mb-3"
+            style={{ background: '#e8f3ff', border: '1px solid rgba(10,102,194,0.2)' }}
+          >
+            <p className="text-sm font-semibold" style={{ color: '#0a66c2' }}>
+              Free: 10 generations per day
+            </p>
+            <p className="text-xs mt-1" style={{ color: '#004182' }}>
+              No setup needed — works out of the box. Enter a license key below to unlock unlimited.
+            </p>
+          </div>
+
+          <label className="block text-sm font-semibold mb-1" style={{ color: 'rgba(0,0,0,0.9)' }}>
+            Pro License Key <span style={{ color: 'rgba(0,0,0,0.4)', fontWeight: 400 }}>(optional)</span>
+          </label>
+          <div className="relative">
+            <input
+              type={showKey ? 'text' : 'password'}
+              value={currentSettings.apiKey}
+              onChange={(e) => updateProviderSettings({ apiKey: e.target.value })}
+              placeholder="Enter your Pro license key for unlimited access"
+              className="w-full px-3 py-2 pr-10 text-sm rounded-lg"
+              style={inputStyle}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+            />
+            <button
+              type="button"
+              onClick={() => setShowKey(!showKey)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-black/[0.08]"
+              style={{ color: 'rgba(0,0,0,0.6)' }}
+            >
+              {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+          <p className="mt-1 text-xs" style={{ color: 'rgba(0,0,0,0.4)' }}>
+            Your license key is stored locally and sent only to our server.
           </p>
         </div>
       )}
@@ -252,7 +279,7 @@ export function ProviderTab() {
       <div>
         <button
           onClick={handleTestConnection}
-          disabled={testStatus === 'testing' || (!currentSettings.apiKey && config.requiresApiKey)}
+          disabled={testStatus === 'testing' || (!currentSettings.apiKey && config.requiresApiKey && activeProvider !== 'proxy')}
           className="flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white bg-brand-600 rounded-full hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {testStatus === 'testing' && <Loader2 size={14} className="animate-spin" />}

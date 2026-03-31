@@ -14,7 +14,7 @@
     "https://api.openai.com/*",
     "https://api.anthropic.com/*",
     "https://api.groq.com/*",
-    "https://linkedin-copilot-api.vercel.app/*",
+    "https://linkedin-copilot-gamma.vercel.app/*",
     "http://localhost/*"
   ],
   "background": {

@@ -6,7 +6,7 @@ import type { ProviderId } from '@/types/ai';
 export const DAILY_GENERATION_LIMIT = 10;
 
 const SYNC_DEFAULTS: SyncStorageSchema = {
-  activeProvider: 'openai',
+  activeProvider: 'proxy',
   activeToneId: 'professional',
   customInstructions: '',
   features: {
