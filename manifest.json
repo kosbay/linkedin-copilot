@@ -5,13 +5,16 @@
   "description": "AI-powered LinkedIn assistant for comments, DMs, and posts",
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "scripting",
+    "tabs"
   ],
   "host_permissions": [
     "https://www.linkedin.com/*",
     "https://api.openai.com/*",
     "https://api.anthropic.com/*",
     "https://api.groq.com/*",
+    "https://linkedin-copilot-api.vercel.app/*",
     "http://localhost/*"
   ],
   "background": {

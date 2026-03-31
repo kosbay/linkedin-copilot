@@ -145,16 +145,31 @@ export function ProviderTab() {
         </div>
       </div>
 
-      {/* API Key */}
+      {/* API Key / License Key */}
       {config.requiresApiKey && (
         <div>
-          <label className="block text-sm font-semibold mb-1" style={{ color: 'rgba(0,0,0,0.9)' }}>API Key</label>
+          <label className="block text-sm font-semibold mb-1" style={{ color: 'rgba(0,0,0,0.9)' }}>
+            {activeProvider === 'proxy' ? 'License Key' : 'API Key'}
+          </label>
+          {activeProvider === 'proxy' && (
+            <div
+              className="p-3 rounded-lg mb-2"
+              style={{ background: '#e8f3ff', border: '1px solid rgba(10,102,194,0.2)' }}
+            >
+              <p className="text-sm" style={{ color: '#0a66c2' }}>
+                Pro uses our hosted AI — no need to bring your own API key.
+              </p>
+              <p className="text-xs mt-1" style={{ color: '#004182' }}>
+                Enter your license key below to activate.
+              </p>
+            </div>
+          )}
           <div className="relative">
             <input
               type={showKey ? 'text' : 'password'}
               value={currentSettings.apiKey}
               onChange={(e) => updateProviderSettings({ apiKey: e.target.value })}
-              placeholder={`Enter your ${config.name} API key`}
+              placeholder={activeProvider === 'proxy' ? 'Enter your Pro license key' : `Enter your ${config.name} API key`}
               className="w-full px-3 py-2 pr-10 text-sm rounded-lg"
               style={inputStyle}
               onFocus={handleInputFocus}
@@ -170,20 +185,10 @@ export function ProviderTab() {
             </button>
           </div>
           <p className="mt-1 text-xs" style={{ color: 'rgba(0,0,0,0.4)' }}>
-            Stored locally on your device. Never sent to our servers.
+            {activeProvider === 'proxy'
+              ? 'Your license key is stored locally and sent only to our server.'
+              : 'Stored locally on your device. Never sent to our servers.'}
           </p>
-        </div>
-      )}
-
-      {!config.requiresApiKey && (
-        <div
-          className="p-4 rounded-lg"
-          style={{ background: '#e8f3ff', border: '1px solid rgba(10,102,194,0.2)' }}
-        >
-          <p className="text-sm" style={{ color: '#0a66c2' }}>
-            Pro mode uses our hosted AI. No API key needed.
-          </p>
-          <p className="text-xs mt-1" style={{ color: '#004182' }}>Coming soon.</p>
         </div>
       )}
 

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Settings, MessageSquare, Palette, Info } from 'lucide-react';
+import { Settings, User, MessageSquare, Palette, Info } from 'lucide-react';
 import { ProviderTab } from './tabs/ProviderTab';
+import { ProfileTab } from './tabs/ProfileTab';
 import { InstructionsTab } from './tabs/InstructionsTab';
 import { TonesTab } from './tabs/TonesTab';
 import { AboutTab } from './tabs/AboutTab';
 
 const TABS = [
   { id: 'provider', label: 'Provider', icon: Settings, component: ProviderTab },
+  { id: 'profile', label: 'Profile', icon: User, component: ProfileTab },
   { id: 'instructions', label: 'Instructions', icon: MessageSquare, component: InstructionsTab },
   { id: 'tones', label: 'Tones', icon: Palette, component: TonesTab },
   { id: 'about', label: 'About', icon: Info, component: AboutTab },

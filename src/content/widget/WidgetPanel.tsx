@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { X, Sparkles, Loader2, ChevronDown, ChevronRight } from 'lucide-react';
 import type { LinkedInInputType, LinkedInContext } from '@/types/linkedin';
 import type { FeatureType, GenerateRequest } from '@/types/ai';
-import type { SyncStorageSchema, LocalStorageSchema } from '@/types/storage';
+import type { SyncStorageSchema, LocalStorageSchema, LinkedInProfile } from '@/types/storage';
 import { buildSystemPrompt, buildUserPrompt } from '@/constants/prompts';
 import { syncStorage, localStorage } from '@/lib/storage';
 import type { useGenerate } from '../hooks/useGenerate';
@@ -36,9 +36,9 @@ export function WidgetPanel({ inputElement, inputType, getContext, generation, o
   const [additionalPrompt, setAdditionalPrompt] = useState('');
   const [settings, setSettings] = useState<(SyncStorageSchema & { providers: LocalStorageSchema['providers'] }) | null>(null);
   const [tonePrompt, setTonePrompt] = useState('');
+  const [userProfile, setUserProfile] = useState<LinkedInProfile | null>(null);
   const [settingsError, setSettingsError] = useState<string | null>(null);
   const [showDirection, setShowDirection] = useState(feature === 'post');
-
   const { status, text, error, generate, reset } = generation;
 
   // Load settings on mount and keep in sync with storage changes
@@ -50,6 +50,7 @@ export function WidgetPanel({ inputElement, inputType, getContext, generation, o
         .then(([sync, local]) => {
           const tone = sync.tonePresets.find((t) => t.id === sync.activeToneId);
           setTonePrompt(tone?.prompt ?? '');
+          setUserProfile(local.userProfile ?? null);
           setSettings({ ...sync, providers: local.providers });
         })
         .catch((err) => {
@@ -77,6 +78,7 @@ export function WidgetPanel({ inputElement, inputType, getContext, generation, o
       feature,
       tonePrompt,
       settings.customInstructions,
+      userProfile,
     );
 
     const userPrompt = buildUserPrompt(feature, {
@@ -262,7 +264,7 @@ export function WidgetPanel({ inputElement, inputType, getContext, generation, o
             <Sparkles size={16} />
             Generate
             <kbd
-              className="ml-2 px-1.5 py-0.5 rounded text-white/70"
+              className="ml-1 px-1.5 py-0.5 rounded text-white/70"
               style={{ fontSize: 11, background: 'rgba(255,255,255,0.2)' }}
             >
               {'\u2318'}Enter
@@ -292,7 +294,7 @@ export function WidgetPanel({ inputElement, inputType, getContext, generation, o
           <ActionButtons
             onInsert={handleInsert}
             onCopy={handleCopy}
-            onRegenerate={handleGenerate}
+            onRegenerate={reset}
           />
         )}
       </div>

@@ -14,6 +14,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Prevent code-splitting for content scripts — CRXJS can fail to resolve
+        // dynamic import URLs in content scripts, causing chrome-extension://invalid/ errors
+        manualChunks: undefined,
+      },
+    },
+  },
   server: {
     port: 5173,
     strictPort: true,

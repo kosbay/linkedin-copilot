@@ -3,3 +3,22 @@ dist/
 .vite/
 *.log
 .DS_Store
+Thumbs.db
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Editor
+.vscode/
+.idea/
+
+# Build
+*.tsbuildinfo
+
+# Pro backend (private - deployed separately on Vercel)
+backend/

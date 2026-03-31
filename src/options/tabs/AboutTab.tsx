@@ -16,7 +16,7 @@ export function AboutTab() {
 
       <div className="space-y-3">
         <a
-          href="https://github.com/yourusername/linkedin-copilot"
+          href="https://github.com/kosbay/linkedin-copilot"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-full transition-colors"
@@ -33,10 +33,12 @@ export function AboutTab() {
         </a>
 
         <button
-          disabled
-          className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-brand-600 rounded-full opacity-50 cursor-not-allowed"
+          onClick={() => {
+            chrome.runtime.openOptionsPage();
+          }}
+          className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-brand-600 rounded-full hover:bg-brand-700 transition-colors cursor-pointer"
         >
-          Upgrade to Pro — Coming Soon
+          Activate Pro
         </button>
       </div>
 

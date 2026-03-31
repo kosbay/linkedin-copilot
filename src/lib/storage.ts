@@ -1,7 +1,9 @@
-import type { SyncStorageSchema, LocalStorageSchema } from '@/types/storage';
+import type { SyncStorageSchema, LocalStorageSchema, UsageData } from '@/types/storage';
 import { DEFAULT_TONE_PRESETS } from '@/constants/tone-presets';
 import { PROVIDER_CONFIGS } from '@/constants/providers';
 import type { ProviderId } from '@/types/ai';
+
+export const DAILY_GENERATION_LIMIT = 10;
 
 const SYNC_DEFAULTS: SyncStorageSchema = {
   activeProvider: 'openai',
@@ -28,6 +30,8 @@ const LOCAL_DEFAULTS: LocalStorageSchema = {
     ]),
   ) as Record<ProviderId, LocalStorageSchema['providers'][ProviderId]>,
   history: [],
+  userProfile: null,
+  usage: { dailyCount: 0, lastResetDate: '' },
 };
 
 export const syncStorage = {
@@ -106,4 +110,31 @@ export async function initializeDefaults(): Promise<void> {
   if (!local.providers) {
     await chrome.storage.local.set(LOCAL_DEFAULTS);
   }
+}
+
+function getTodayDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export async function getUsage(): Promise<UsageData> {
+  const usage = await localStorage.get('usage');
+  const today = getTodayDate();
+  if (usage.lastResetDate !== today) {
+    return { dailyCount: 0, lastResetDate: today };
+  }
+  return usage;
+}
+
+export async function checkUsageLimit(): Promise<{ allowed: boolean; remaining: number }> {
+  const usage = await getUsage();
+  const remaining = Math.max(0, DAILY_GENERATION_LIMIT - usage.dailyCount);
+  return { allowed: remaining > 0, remaining };
+}
+
+export async function incrementUsage(): Promise<void> {
+  const usage = await getUsage();
+  await localStorage.set('usage', {
+    dailyCount: usage.dailyCount + 1,
+    lastResetDate: getTodayDate(),
+  });
 }

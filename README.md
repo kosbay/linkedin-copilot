@@ -42,7 +42,7 @@ Bring your own API key. Your keys stay on your device.
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/linkedin-copilot.git
+git clone https://github.com/kosbay/linkedin-copilot.git
 cd linkedin-copilot
 
 # Install dependencies

@@ -1,5 +1,6 @@
 import type { RequestMessage, ResponseMessage } from '@/types/messages';
 import { syncStorage, localStorage } from '@/lib/storage';
+import { handleScrapeProfile } from './handlers/scrape-profile';
 
 export async function handleMessage(
   message: RequestMessage,
@@ -16,6 +17,15 @@ export async function handleMessage(
 
     case 'PING':
       return { type: 'PONG' };
+
+    case 'SCRAPE_PROFILE': {
+      try {
+        const profile = await handleScrapeProfile();
+        return { type: 'PROFILE_SCRAPED', payload: { profile } };
+      } catch (err) {
+        return { type: 'ERROR', payload: { message: err instanceof Error ? err.message : 'Profile scraping failed' } };
+      }
+    }
 
     default:
       return { type: 'ERROR', payload: { message: 'Unknown message type' } };

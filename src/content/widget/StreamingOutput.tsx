@@ -17,6 +17,23 @@ export function StreamingOutput({ text, status, error }: StreamingOutputProps) {
   }, [text]);
 
   if (status === 'error') {
+    const isLimitReached = error?.startsWith('__LIMIT_REACHED__');
+    const displayError = isLimitReached ? error!.replace('__LIMIT_REACHED__', '') : error;
+
+    if (isLimitReached) {
+      return (
+        <div
+          className="lc-output p-4 rounded-lg text-center"
+          style={{ color: '#0a66c2', background: '#eef3f8', border: '1px solid #d0e0f0' }}
+        >
+          <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>Daily limit reached</div>
+          <div style={{ fontSize: 13, color: 'rgba(0,0,0,0.7)', lineHeight: 1.5 }}>
+            {displayError}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div
         className="lc-output p-3 rounded-lg"

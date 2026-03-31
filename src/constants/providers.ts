@@ -39,8 +39,9 @@ export const PROVIDER_CONFIGS: Record<string, ProviderConfig> = {
   proxy: {
     id: 'proxy',
     name: 'LinkedIn Copilot Pro',
-    baseUrl: 'https://api.linkedincopilot.com/v1',
-    requiresApiKey: false,
+    // TODO: Update this after deploying to Vercel (e.g. https://your-project.vercel.app)
+    baseUrl: 'https://linkedin-copilot-api.vercel.app',
+    requiresApiKey: true,
     defaultModel: 'claude-sonnet-4-20250514',
     models: [
       { id: 'claude-sonnet-4-20250514', name: 'Claude Sonnet 4 (Pro)', maxTokens: 4096 },

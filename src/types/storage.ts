@@ -14,6 +14,26 @@ export interface ProviderSettings {
   maxTokens: number;
 }
 
+export interface LinkedInProfile {
+  profileUrl: string;
+  name: string;
+  headline: string;
+  location?: string;
+  about?: string;
+  experience: Array<{
+    title: string;
+    company: string;
+    duration?: string;
+  }>;
+  education: Array<{
+    school: string;
+    degree?: string;
+    years?: string;
+  }>;
+  skills: string[];
+  scrapedAt: number;
+}
+
 export interface SyncStorageSchema {
   activeProvider: ProviderId;
   activeToneId: string;
@@ -22,9 +42,16 @@ export interface SyncStorageSchema {
   tonePresets: TonePreset[];
 }
 
+export interface UsageData {
+  dailyCount: number;
+  lastResetDate: string; // YYYY-MM-DD
+}
+
 export interface LocalStorageSchema {
   providers: Record<ProviderId, ProviderSettings>;
   history: GenerationHistoryEntry[];
+  userProfile: LinkedInProfile | null;
+  usage: UsageData;
 }
 
 export interface GenerationHistoryEntry {
